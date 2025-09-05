@@ -4,10 +4,12 @@ using UnityEngine.SceneManagement;
 
 public class BootScene : MonoBehaviour
 {
+    [Header("Boot Time Delay")]
+    [SerializeField] private float bootTimeDelay = 3f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Invoke(nameof(LoadScene_MainMenu), 3f);
+        Invoke(nameof(LoadScene_MainMenu), bootTimeDelay);
     }
 
     // Update is called once per frame
