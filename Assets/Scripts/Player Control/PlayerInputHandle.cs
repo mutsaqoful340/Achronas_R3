@@ -8,8 +8,9 @@ public class PlayerInputHandler : MonoBehaviour
     public bool JumpPressed { get; private set; }
     public bool RunHeld { get; private set; }
     public bool CrouchPressed { get; private set; }
+    public bool InteractPressed { get; private set; }
 
-    private GameInputActions inputActions;
+    public GameInputActions inputActions;
 
     private void OnEnable()
     {
@@ -27,6 +28,9 @@ public class PlayerInputHandler : MonoBehaviour
             inputActions.Player.Run.performed += ctx => RunHeld = true;
             inputActions.Player.Run.canceled += ctx => RunHeld = false;
             inputActions.Player.Crouch.performed += ctx => CrouchPressed = true;
+
+            inputActions.Player.Interact.performed += ctx => InteractPressed = true;
+            inputActions.Player.Interact.canceled += ctx => InteractPressed = false;
         }
 
         inputActions.Enable();
@@ -42,5 +46,6 @@ public class PlayerInputHandler : MonoBehaviour
         // Reset one-frame buttons
         JumpPressed = false;
         CrouchPressed = false;
+        InteractPressed = false;
     }
 }
