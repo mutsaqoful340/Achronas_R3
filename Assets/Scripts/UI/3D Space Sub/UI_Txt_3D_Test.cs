@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class UI_Txt_3D_Test : MonoBehaviour
 {
     public UI_Txt_3D_Manager subtitleManager;
-    public PlayerInputHandler playerInput;
+    public Player_InputHandle playerInput;
     public GameInputActions inputActions;
     void Start()
     {
