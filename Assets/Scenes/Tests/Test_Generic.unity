@@ -2725,7 +2725,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1533865789}
         m_TargetAssemblyTypeName: TestUI_Gameplay, Assembly-CSharp
-        m_MethodName: OnClick_SaveGane
+        m_MethodName: OnClick_SaveGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2785,6 +2785,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f41b1d5e19dba944f9097a7024a7f98a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneToLoadName: 
+  sceneToUnloadName: 
 --- !u!1 &1578226709
 GameObject:
   m_ObjectHideFlags: 0
@@ -3413,6 +3415,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f41b1d5e19dba944f9097a7024a7f98a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneToLoadName: System_MainMenu
+  sceneToUnloadName: Test_Generic
 --- !u!1 &1747751929
 GameObject:
   m_ObjectHideFlags: 0
