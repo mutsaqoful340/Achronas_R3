@@ -1,0 +1,7 @@
+OnClick_NewGame() Logic:
+The System_DataPersistenceManager.NewGame() = Make a new Game Data File.
+The Additive Load and Unload scene will trigger the OnSceneLoad & OnSceneUnload which = READ the newly initialized Game Data file.
+(!) This will work fine for MainMenu system. But in the case of gameplay saving, might need some tweaks.
+
+OnClicl_ContinueGame() Logic:
+Has similar function as OnClick_NewGame, but this just reading initialized Game Data file.
