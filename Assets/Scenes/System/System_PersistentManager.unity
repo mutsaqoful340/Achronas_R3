@@ -311,6 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12e94915695da0044b4eca6ddba2ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initializeDataIfNull: 0
   dataFileName: GameData_1.game
 --- !u!4 &1388978745
 Transform:
