@@ -9,8 +9,7 @@ public class TestSystem_UniversalLoading : MonoBehaviour
     public void LoadTargetScene()
     {
         System_UniversalLoadingScreen.instance.sceneToLoadName = sceneToLoadName;
-        System_UniversalLoadingScreen.instance.sceneToUnloadName = currentActiveSceneName;
         //System_UniversalLoadingScreen.instance.SetIsSaveGame(true);
-        System_UniversalLoadingScreen.instance.System_ActivateLoadingScreen();
+        //System_UniversalLoadingScreen.instance.System_ActivateLoadingScreen();
     }
 }
