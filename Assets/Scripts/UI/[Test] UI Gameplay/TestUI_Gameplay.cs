@@ -9,7 +9,7 @@ public class TestUI_Gameplay : MonoBehaviour
     [Header("Scene Names")]
     public string sceneToLoadName;
     public string sceneToUnloadName;
-    
+
     public void OnClick_SaveGame()
     {
         System_DataPersistenceManager.instance.SaveGame();
@@ -18,9 +18,13 @@ public class TestUI_Gameplay : MonoBehaviour
 
     public void OnClick_LoadGame()
     {
-        System_UniversalLoadingScreen.instance.sceneToLoadName = this.sceneToLoadName;
-        System_UniversalLoadingScreen.instance.sceneToUnloadName = this.sceneToUnloadName;
-        System_UniversalLoadingScreen.instance.SetIsLoadGame(true);
+        System_UniversalLoadingScreen.instance.TransitionToScene(sceneToLoadName, sceneToUnloadName);
         Debug.Log("Load Game Clicked");
+    }
+    
+    public void OnClick_ReturnToMainMenu()
+    {
+        System_UniversalLoadingScreen.instance.TransitionToScene(sceneToLoadName, sceneToUnloadName);
+        Debug.Log("Return to Main Menu Clicked");
     }
 }
