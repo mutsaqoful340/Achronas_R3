@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class Player_MovementController : MonoBehaviour, System_IDataPersistence
+public class Player_MovementController : MonoBehaviour
 {
     public Transform cameraTransform;
     public float walkSpeed = 4f;
@@ -46,24 +46,40 @@ public class Player_MovementController : MonoBehaviour, System_IDataPersistence
         HandleCrouch();
     }
 
-    public void LoadData(System_GameData data)
-    {
-        this.transform.position = data.playerPosition;
-    }
-
-    public void SaveData(ref System_GameData data)
-    {
-        data.playerPosition = this.transform.position;
-    }
-
     private void Move()
     {
-        Vector2 inputDir = input.MoveInput;
-        Vector3 moveDir = cameraTransform.forward * inputDir.y + cameraTransform.right * inputDir.x;
+        // Safe input access
+        Vector2 inputDir = input != null ? input.MoveInput : Vector2.zero;
+        bool runHeld = input != null && input.RunHeld;
+
+        // Resolve a camera transform (use assigned, then Camera.main, then player transform as last resort)
+        Transform cam = cameraTransform != null ? cameraTransform : Camera.main != null ? Camera.main.transform : null;
+        if (cameraTransform == null && cam != null)
+        {
+            // update cached reference to reduce repeated Camera.main lookups
+            cameraTransform = cam;
+        }
+
+        if (cam == null)
+        {
+            // If absolutely no camera is available, fall back to player-local directions
+            Debug.LogWarning("No camera transform available for Player_MovementController — falling back to player axes.");
+        }
+
+        Vector3 moveDir;
+        if (cam != null)
+        {
+            moveDir = cam.forward * inputDir.y + cam.right * inputDir.x;
+        }
+        else
+        {
+            moveDir = transform.forward * inputDir.y + transform.right * inputDir.x;
+        }
+
         moveDir.y = 0f;
         moveDir.Normalize();
 
-        float targetSpeed = isCrouching ? crouchSpeed : (input.RunHeld ? runSpeed : walkSpeed);
+        float targetSpeed = isCrouching ? crouchSpeed : (runHeld ? runSpeed : walkSpeed);
         Vector3 desiredVelocity = moveDir * targetSpeed;
 
         // Extract horizontal velocity
