@@ -24,12 +24,14 @@ public class System_DataPersistenceManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
+            // This creates the data handler with a safe file path and your specified file name.
+            this.dataHandler = new System_FileDataHandler(Application.persistentDataPath, dataFileName);
+            LoadGame();
         }
         else
         {
             Destroy(this.gameObject);
         }
-        this.dataHandler = new System_FileDataHandler(Application.persistentDataPath, dataFileName);
     }
 
     private void OnEnable()
@@ -46,35 +48,46 @@ public class System_DataPersistenceManager : MonoBehaviour
 
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("Scene Loaded: " + scene.name);
-        this.dataPersistenceObjects = FindAllDataPersistenceObjects(); // Find all the scripts in the scene that implements the IDataPersistence interface
+        //Debug.Log("Scene Loaded: " + scene.name);
+        //this.dataPersistenceObjects = FindAllDataPersistenceObjects(); // Find all the scripts in the scene that implements the IDataPersistence interface
         //LoadGame(); // [CHANGE LATER] Might change this due to the implementation of Continue Button.
 
     }
 
     public void OnSceneUnloaded(Scene scene)
     {
-        Debug.Log("Scene Unloaded: " + scene.name);
-        SaveGame(); // [CHANGE LATER] This is temporary, will implement other form of SAVE and auto-save feature later.
+        //Debug.Log("Scene Unloaded: " + scene.name);
+        //SaveGame(); // [CHANGE LATER] This is temporary, will implement other form of SAVE and auto-save feature later.
     }
 
     private void Start()
     {
+        //LoadGame();
     }
 
     public void NewGame()
     {
-        gameData = new System_GameData();
+        // 1. Create a fresh game data object with default values.
+        this.gameData = new System_GameData();
+
+        // 2. Find all data persistence objects in the current scene.
+        //    (This is the part that was missing)
+        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
+
+        // 3. Push the new, empty game data to all scripts so they reset themselves.
+        //    (This is also the part that was missing)
+        foreach (System_IDataPersistence dataPersistenceObj in dataPersistenceObjects)
+        {
+            dataPersistenceObj.LoadData(gameData);
+        }
+
+        Debug.Log("Started a new game. Last checkpoint ID is now: " + gameData.lastCheckpointID);
     }
 
     public void LoadGame()
     {
+        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
         this.gameData = dataHandler.Load(); // When the save data doesn't exist, this will return null > and will create a new game.
-
-        //if (this.gameData == null && initializeDataIfNull)
-        //{
-        //    NewGame();
-        //}
 
         // [CHANGE LATER] This is temporary, the Continue Button will be disabled if no save data is found.
 
@@ -93,6 +106,9 @@ public class System_DataPersistenceManager : MonoBehaviour
             Debug.LogWarning("No data to save. A new game must be started before data can be saved.");
             return;
         }
+        // Find all data persistence objects in the current scene right before saving.
+        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
+
         // Pass the current game data to other scripts  so they can update it
         foreach (System_IDataPersistence dataPersistenceObj in dataPersistenceObjects)
         {
