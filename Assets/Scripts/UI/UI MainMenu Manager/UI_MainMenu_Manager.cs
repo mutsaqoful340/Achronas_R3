@@ -14,36 +14,37 @@ public class UI_MainMenu_Manager : MonoBehaviour
     [SerializeField] private Button quitGameButton;
 
     [Header("Scene Names")]
-    [SerializeField] private string sceneToLoadName;
-    [SerializeField] private string sceneToUnloadName;
+    [Tooltip("The name of the gameplay scene to load.")]
+    [SerializeField] private string sceneToLoadName = "GameplayScene"; // Example name
+    [Tooltip("The name of the main menu scene to unload.")]
+    [SerializeField] private string sceneToUnloadName = "MainMenu"; // Example name
 
     void Start()
     {
-        if (!System_DataPersistenceManager.instance.HasGameData())
+        // This logic is still correct and doesn't need to be changed.
+        if (System_DataPersistenceManager.instance != null && !System_DataPersistenceManager.instance.HasGameData())
         {
-            continueGameButton.interactable = false; // Disable Continue Button if no save data is found.
+            continueGameButton.interactable = false;
+            Debug.Log("No Save Data Found - Continue Button Disabled");
         }
     }
+
     public void OnClick_NewGame()
     {
         DisableMenuButtons();
-        // Create a New Game - which will initialize the game data to default values
-        //System_DataPersistenceManager.instance.NewGame();
-        System_UniversalLoadingScreen.instance.sceneToLoadName = this.sceneToLoadName;
-        System_UniversalLoadingScreen.instance.sceneToUnloadName = this.sceneToUnloadName;
-        System_UniversalLoadingScreen.instance.SetIsNewGame(true);
 
-
-        //Debug.Log("New Game Clicked");
+        // --- CHANGE ---
+        // Call the new, cleaner method from the loading screen script.
+        System_UniversalLoadingScreen.instance.LoadNewGame(sceneToLoadName, sceneToUnloadName);
     }
 
     public void OnClick_ContinueGame()
     {
         DisableMenuButtons();
-        System_UniversalLoadingScreen.instance.sceneToLoadName = this.sceneToLoadName;
-        System_UniversalLoadingScreen.instance.sceneToUnloadName = this.sceneToUnloadName;
-        System_UniversalLoadingScreen.instance.SetIsLoadGame(true);
-        Debug.Log("Continue Game Clicked");
+
+        // --- CHANGE ---
+        // Call the new, cleaner method for loading a saved game.
+        System_UniversalLoadingScreen.instance.LoadSavedGame(sceneToLoadName, sceneToUnloadName);
     }
 
     public void OnClick_QuitGame()
