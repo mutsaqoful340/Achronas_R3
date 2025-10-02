@@ -12,6 +12,9 @@ public class System_PlayerSpawner : MonoBehaviour
     [Tooltip("The Transform where the player will spawn if no save data or matching checkpoint is found.")]
     public Transform defaultSpawnPoint;
 
+    [Header("Debug")]
+    [SerializeField] private bool debugMode = false;
+
     private void OnEnable()
     {
         // Subscribe to the event that fires when the active scene changes.
@@ -24,6 +27,13 @@ public class System_PlayerSpawner : MonoBehaviour
         SceneManager.activeSceneChanged -= OnActiveSceneChanged;
     }
 
+    void Start()
+    {
+        if (debugMode)
+        {
+            SpawnPlayer();
+        }
+    }
     /// <summary>
     /// This method is called by the SceneManager when a new scene is set to be the active one.
     /// </summary>
