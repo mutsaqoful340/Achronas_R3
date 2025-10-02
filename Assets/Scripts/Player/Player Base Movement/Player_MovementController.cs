@@ -28,11 +28,13 @@ public class Player_MovementController : MonoBehaviour
     private Vector3 velocity;
     private bool isGrounded;
     private bool isCrouching = false;
+    private Game_PlayerStamina playerStamina;
 
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
         input = GetComponent<Player_InputHandle>();
+        playerStamina = FindAnyObjectByType<Game_PlayerStamina>();
     }
 
     private void Update()
@@ -48,6 +50,10 @@ public class Player_MovementController : MonoBehaviour
 
     private void Move()
     {
+        if (playerStamina.currentStamina >= 0)
+        {
+            
+        }
         // Safe input access
         Vector2 inputDir = input != null ? input.MoveInput : Vector2.zero;
         bool runHeld = input != null && input.RunHeld;
@@ -79,7 +85,8 @@ public class Player_MovementController : MonoBehaviour
         moveDir.y = 0f;
         moveDir.Normalize();
 
-        float targetSpeed = isCrouching ? crouchSpeed : (runHeld ? runSpeed : walkSpeed);
+        bool canActuallyRun = runHeld && playerStamina != null && playerStamina.CanRun;
+        float targetSpeed = isCrouching ? crouchSpeed : (canActuallyRun ? runSpeed : walkSpeed);
         Vector3 desiredVelocity = moveDir * targetSpeed;
 
         // Extract horizontal velocity
