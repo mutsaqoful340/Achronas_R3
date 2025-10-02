@@ -312,9 +312,6 @@ MonoBehaviour:
   minimumLoadTime: 2
   sceneToLoadName: 
   sceneToUnloadName: 
-  performNewGame: 0
-  performSaveGame: 0
-  performLoadGame: 0
 --- !u!1 &1388978743
 GameObject:
   m_ObjectHideFlags: 0
