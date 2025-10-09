@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - EdgeWall
+  - Coll_2D_SuccessZone
   layers:
   - Default
   - TransparentFX
