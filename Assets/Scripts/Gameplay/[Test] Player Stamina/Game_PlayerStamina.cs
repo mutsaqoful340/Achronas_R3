@@ -9,6 +9,7 @@ public class Game_PlayerStamina : MonoBehaviour
     public float minStaminaToRun = 10f; // Minimum stamina required to start running
     public float staminaRegenRate = 5f; // Stamina points regenerated per second
     public float staminaDepletionRate = 10f; // Stamina points depleted per second when running
+    public Game_QTEController qteController; // Reference to the QTE controller for recovery
 
     [Header("Stamina UI")]
     public Image staminaBar;
@@ -61,6 +62,7 @@ public class Game_PlayerStamina : MonoBehaviour
         {
             currentStamina -= staminaDepletionRate * Time.deltaTime;
             staminaChanged = true;
+            qteController.StartQTE(); // Start the QTE when running
 
             // If stamina runs out, the player becomes exhausted
             if (currentStamina <= 0)
