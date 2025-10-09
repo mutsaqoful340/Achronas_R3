@@ -28,13 +28,6 @@ public class Game_HeartBeat : MonoBehaviour
 
     void Update()
     {
-        timer += Time.deltaTime;
-        if (timer >= beatInterval)
-        {
-            PlayHeartBeat();
-            timer = 0f;
-        }
-
         // If we don't have a reference to the player's input yet, try to find it.
         if (playerInput == null)
         {
@@ -46,6 +39,12 @@ public class Game_HeartBeat : MonoBehaviour
             {
                 return;
             }
+        }
+        timer += Time.deltaTime;
+        if (timer >= beatInterval)
+        {
+            PlayHeartBeat();
+            timer = 0f;
         }
     }
 
