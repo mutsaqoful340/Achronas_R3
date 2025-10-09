@@ -34,32 +34,6 @@ public class System_DataPersistenceManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        SceneManager.sceneUnloaded += OnSceneUnloaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-        SceneManager.sceneUnloaded -= OnSceneUnloaded;
-    }
-
-    public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        //Debug.Log("Scene Loaded: " + scene.name);
-        //this.dataPersistenceObjects = FindAllDataPersistenceObjects(); // Find all the scripts in the scene that implements the IDataPersistence interface
-        //LoadGame(); // [CHANGE LATER] Might change this due to the implementation of Continue Button.
-
-    }
-
-    public void OnSceneUnloaded(Scene scene)
-    {
-        //Debug.Log("Scene Unloaded: " + scene.name);
-        //SaveGame(); // [CHANGE LATER] This is temporary, will implement other form of SAVE and auto-save feature later.
-    }
-
     private void Start()
     {
         //LoadGame();
@@ -67,15 +41,9 @@ public class System_DataPersistenceManager : MonoBehaviour
 
     public void NewGame()
     {
-        // 1. Create a fresh game data object with default values.
         this.gameData = new System_GameData();
-
-        // 2. Find all data persistence objects in the current scene.
-        //    (This is the part that was missing)
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
 
-        // 3. Push the new, empty game data to all scripts so they reset themselves.
-        //    (This is also the part that was missing)
         foreach (System_IDataPersistence dataPersistenceObj in dataPersistenceObjects)
         {
             dataPersistenceObj.LoadData(gameData);
@@ -89,9 +57,6 @@ public class System_DataPersistenceManager : MonoBehaviour
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
         this.gameData = dataHandler.Load(); // When the save data doesn't exist, this will return null > and will create a new game.
 
-        // [CHANGE LATER] This is temporary, the Continue Button will be disabled if no save data is found.
-
-        // Push the loaded data to all other scripts that need it
         foreach (System_IDataPersistence dataPersistenceObj in dataPersistenceObjects)
         {
             dataPersistenceObj.LoadData(gameData);
