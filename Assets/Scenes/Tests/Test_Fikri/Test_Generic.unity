@@ -502,6 +502,8 @@ MonoBehaviour:
   successZonesParent: {fileID: 52968262}
   needleSpeed: 200
   qteDelay: 1
+  staminaRecoveryAmount: 20
+  staminaPenaltyAmount: 10
   OnQTESuccess:
     m_PersistentCalls:
       m_Calls: []
