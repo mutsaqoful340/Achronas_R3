@@ -5,7 +5,7 @@ using System.Collections;
 public class UI_Txt_3D : MonoBehaviour
 {
     [Header("Timing")]
-    public float waitBeforeFall = 1f;
+    public float waitBeforeFall = 1f;     
     public float fallSpeed = 2f;
     public float lifetimeAfterLanding = 2f;
     public float fadeDuration = 0.5f;
@@ -15,9 +15,10 @@ public class UI_Txt_3D : MonoBehaviour
     public float maxLandingTilt = 45f;     // random tilt around Z when settled
 
     private bool hasLanded = false;
-    private bool _isFalling = false;
+    private bool isFalling = false;
 
-    private TextMeshPro text;   // ✅ TextMeshPro (3D), not UGUI
+    private TextMeshProUGUI text;
+    private RectTransform rect;
     private float groundY;
 
     // Random fall spin
@@ -25,10 +26,11 @@ public class UI_Txt_3D : MonoBehaviour
 
     void Awake()
     {
-        text = GetComponent<TextMeshPro>();
+        text = GetComponent<TextMeshProUGUI>();
+        rect = GetComponent<RectTransform>();
 
         // Raycast straight down to detect ground
-        Ray ray = new Ray(transform.position, Vector3.down);
+        Ray ray = new Ray(rect.position, Vector3.down);
         if (Physics.Raycast(ray, out RaycastHit hit, 100f))
         {
             groundY = hit.point.y;
@@ -48,31 +50,31 @@ public class UI_Txt_3D : MonoBehaviour
     IEnumerator StartFallingAfterDelay()
     {
         yield return new WaitForSeconds(waitBeforeFall);
-        _isFalling = true;
-        transform.SetParent(null, true);
+        isFalling = true;
     }
 
     void Update()
     {
-        if (_isFalling && !hasLanded)
+        if (isFalling && !hasLanded)
         {
-            // Falling in world space
-            Vector3 pos = transform.position;
+            // Falling
+            Vector3 pos = rect.localPosition;
             pos.y -= fallSpeed * Time.deltaTime;
-            transform.position = pos;
+            rect.localPosition = pos;
 
             // Spin while falling
-            transform.Rotate(Vector3.forward, randomFallRotation * fallRotationSpeed * Time.deltaTime);
+            rect.Rotate(Vector3.forward, randomFallRotation * fallRotationSpeed * Time.deltaTime);
 
             // Landing check
-            if (transform.position.y <= groundY)
+            if (rect.position.y <= groundY)
             {
-                transform.position = new Vector3(transform.position.x, groundY, transform.position.z);
+                rect.position = new Vector3(rect.position.x, groundY, rect.position.z);
                 hasLanded = true;
 
-                // Lay flat face-up
+                // Settle face-up like on the ground, only Z tilt random
                 float finalZRot = Random.Range(-maxLandingTilt, maxLandingTilt);
-                transform.rotation = Quaternion.Euler(90f, 0f, finalZRot);
+                rect.localRotation = Quaternion.Euler(90f, 0f, finalZRot); 
+                // 90° on X = facing up, Z = tilt variation
 
                 StartCoroutine(DisappearAfterDelay());
             }
