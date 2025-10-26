@@ -35,7 +35,8 @@ public class UI_MainMenu_Manager : MonoBehaviour
 
         // --- CHANGE ---
         // Call the new, cleaner method from the loading screen script.
-        System_UniversalLoadingScreen.instance.LoadNewGame(sceneToLoadName, sceneToUnloadName);
+        // System_UniversalLoadingScreen.instance.LoadNewGame(sceneToLoadName, sceneToUnloadName);
+        System_DataPersistenceManager.instance.systemState = System_DataPersistenceManager.SystemState.NewGame;
     }
 
     public void OnClick_ContinueGame()
@@ -44,7 +45,8 @@ public class UI_MainMenu_Manager : MonoBehaviour
 
         // --- CHANGE ---
         // Call the new, cleaner method for loading a saved game.
-        System_UniversalLoadingScreen.instance.LoadSavedGame(sceneToLoadName, sceneToUnloadName);
+        // System_UniversalLoadingScreen.instance.LoadSavedGame(sceneToLoadName, sceneToUnloadName);
+        System_DataPersistenceManager.instance.systemState = System_DataPersistenceManager.SystemState.LoadGame;
     }
 
     public void OnClick_QuitGame()
