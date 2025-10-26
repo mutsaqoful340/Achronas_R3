@@ -13,6 +13,7 @@ public class System_DataPersistenceManager : MonoBehaviour
     [SerializeField] private string dataFileName = "";
 
     public System_GameData gameData;
+    public SystemState systemState;
     private List<System_IDataPersistence> dataPersistenceObjects;
     private System_FileDataHandler dataHandler;
 
@@ -39,8 +40,35 @@ public class System_DataPersistenceManager : MonoBehaviour
         //LoadGame();
     }
 
+    public enum SystemState
+    {
+        Idle,
+        NewGame,
+        LoadGame,
+        SaveGame
+    }
+
+    public void GameSystem()
+    {
+        switch (systemState)
+        {
+            case SystemState.NewGame:
+                NewGame();
+                systemState = SystemState.Idle;
+                break;
+            case SystemState.LoadGame:
+                LoadGame();
+                systemState = SystemState.Idle;
+                break;
+            case SystemState.SaveGame:
+                SaveGame();
+                break;
+        }
+    }
+
     public void NewGame()
     {
+        Debug.Log("Starting New Game...");
         this.gameData = new System_GameData();
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
 
@@ -48,12 +76,11 @@ public class System_DataPersistenceManager : MonoBehaviour
         {
             dataPersistenceObj.LoadData(gameData);
         }
-
-        Debug.Log("Started a new game. Last checkpoint ID is now: " + gameData.lastCheckpointID);
     }
 
     public void LoadGame()
     {
+        Debug.Log("Loading Game Data...");
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
         this.gameData = dataHandler.Load(); // When the save data doesn't exist, this will return null > and will create a new game.
 
@@ -61,7 +88,6 @@ public class System_DataPersistenceManager : MonoBehaviour
         {
             dataPersistenceObj.LoadData(gameData);
         }
-        Debug.Log("Game Loaded Data = " + "Health: " + gameData.currentPlayerHealth + ", Position: " + gameData.playerPosition);
     }
 
     public void SaveGame()
@@ -79,7 +105,6 @@ public class System_DataPersistenceManager : MonoBehaviour
         {
             dataPersistenceObj.SaveData(ref gameData);
         }
-        Debug.Log("Game Saved Data = " + "Health: " + gameData.currentPlayerHealth + ", Position: " + gameData.playerPosition);
 
         // Save all the data to a file using the Data Handler
         dataHandler.Save(gameData);
@@ -91,9 +116,11 @@ public class System_DataPersistenceManager : MonoBehaviour
         IEnumerable<System_IDataPersistence> dataPersistenceObjects = FindObjectsOfType<MonoBehaviour>().OfType<System_IDataPersistence>();
         return new List<System_IDataPersistence>(dataPersistenceObjects);
     }
-    
+
     public bool HasGameData()
     {
         return gameData != null;
     }
+    
+    
 }
