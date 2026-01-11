@@ -4,14 +4,14 @@ using UnityEngine;
 public class Dialogue_Test : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private DialogueManager dialogueManager;
+    [SerializeField] private DialogueSystem dialogueSystem;
     
     [Header("Dialogue Options")]
     [Tooltip("Use ScriptableObject for easy editing")]
     [SerializeField] private DialogueSequenceSO dialogueSequence;
     
     [Header("Or Use Manual Setup")]
-    [SerializeField] private PerLetterSubtitleManager subtitleManager;
+    [SerializeField] private SubtitleSystem subtitleSystem;
     [SerializeField] private bool useManualDialogue = false;
 
     [Header("Settings")]
@@ -28,42 +28,42 @@ public class Dialogue_Test : MonoBehaviour
     [ContextMenu("Test Dialogue")]
     public void TestDialogue()
     {
-        if (dialogueManager == null)
+        if (dialogueSystem == null)
         {
-            Debug.LogError("Dialogue_Test: DialogueManager not assigned!");
+            Debug.LogError("Dialogue_Test: DialogueSystem not assigned!");
             return;
         }
 
         // Use ScriptableObject (recommended)
         if (!useManualDialogue && dialogueSequence != null)
         {
-            dialogueManager.PlayDialogue(dialogueSequence);
+            dialogueSystem.PlayDialogue(dialogueSequence);
         }
         // Or use manual code-based dialogue
-        else if (useManualDialogue && subtitleManager != null)
+        else if (useManualDialogue && subtitleSystem != null)
         {
             TestManualDialogue();
         }
         else
         {
-            Debug.LogError("Dialogue_Test: No dialogue configured! Assign a DialogueSequence or enable useManualDialogue with a SubtitleManager.");
+            Debug.LogError("Dialogue_Test: No dialogue configured! Assign a DialogueSequence or enable useManualDialogue with a SubtitleSystem.");
         }
     }
 
     private void TestManualDialogue()
     {
         // Create a test dialogue sequence manually (for advanced users)
-        var actions = new List<IDialogueAction>
+        var actions = new List<DialogueSystem.IDialogueAction>
         {
-            new ShowTextAction(subtitleManager, "Hello there, traveler!"),
-            new WaitAction(this, 1.5f),
-            new ShowTextAction(subtitleManager, "Welcome to this world."),
-            new WaitAction(this, 1.0f),
-            new ShowTextAction(subtitleManager, "May your journey be safe."),
-            new TriggerEventAction(() => Debug.Log("Dialogue Test Complete!"))
+            new DialogueSystem.ShowTextAction(subtitleSystem, "Hello there, traveler!"),
+            new DialogueSystem.WaitAction(this, 1.5f),
+            new DialogueSystem.ShowTextAction(subtitleSystem, "Welcome to this world."),
+            new DialogueSystem.WaitAction(this, 1.0f),
+            new DialogueSystem.ShowTextAction(subtitleSystem, "May your journey be safe."),
+            new DialogueSystem.TriggerEventAction(() => Debug.Log("Dialogue Test Complete!"))
         };
 
-        dialogueManager.PlayDialogue(actions);
+        dialogueSystem.PlayDialogue(actions);
     }
 }
 
